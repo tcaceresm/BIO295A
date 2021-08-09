@@ -3,7 +3,7 @@ Se encuentran los scripts utilizados en el curso BIO295A, con el fin de analizar
 
 # Link para ejecutar cuadernillos en Google Colab
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tcaceresm/BIO295A/blob/master/Google%Colab/analisis_regiones.ipynb): Análisis... 
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tcaceresm/BIO295A/blob/master/Google%20Colab/analisis_regiones.ipynb): Análisis... 
 
 
 ## Licencia / License
