@@ -1,7 +1,7 @@
 # BIO295A
 Se encuentran los scripts utilizados en el curso BIO295A, con el fin de analizar imágenes de series de tiempo obtenidas en placas de 96 pocillos y en otros formatos.
 
-# Link para ejecutar cuadernillos en Google Colab
+# Link para abrir los notebooks en Colab
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tcaceresm/BIO295A/blob/master/Google%20Colab/analisis_regiones.ipynb): Análisis de regiones dentro de imágenes de series de tiempo
 
