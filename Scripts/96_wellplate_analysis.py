@@ -1,8 +1,7 @@
-from skimage import io, draw, exposure
+from skimage import draw, exposure
 import numpy as np
 import pandas as pd
 import plotly.express as px
-import skimage
 
 
 def obtener_datos():
@@ -32,6 +31,7 @@ def obtener_datos():
 
 def ajustar_contraste(imagen):
     '''Ajusta el contraste de las imágenes'''
+    # No funciona muy bien que digamos
     image_adjusted = exposure.rescale_intensity(imagen)
     return image_adjusted
 
@@ -39,7 +39,8 @@ def ajustar_contraste(imagen):
 
 def distancias_pocillos(coordenadas, columns=12, rows=8):
     """
-    Descripcion.
+    Calcula la distancia entre pocillos de una misma fila y
+    entre filas distintas.
 
 Parameters
 ----------
@@ -87,9 +88,12 @@ def placas_analisis(imagen, coordinate, radius, background,
 
 Parameters
 ----------
-imagen : str
+imagen : numpy.ndarray
 
-    Nombre de la imagen que se quiere analizar
+    Variable que contiene la imagen en forma de un numpy array.
+    Recordar que al leer la imagen con el módulo io del paquete
+    skimage, la imagen se lee como un numpy array.
+    (imagen = io.imread("nombre_imagen.tif))
     
 coordinate : tuple
 
