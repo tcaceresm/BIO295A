@@ -18,19 +18,21 @@ def obtener_datos():
     coordenadas = []
     agregar_region = True
     print('Se procederá a solicitar las coordenadas X e Y de las regiones de interés')
-    x = int(input("Ingrese la coordenada X de la región: "))
-    y = int(input("Ingrese la coordenada Y de la región: "))
+    x = int(input("Ingrese la coordenada X de la región 1: "))
+    y = int(input("Ingrese la coordenada Y de la región 1: "))
     coordenadas.append((x, y))
 
+    i = 2
     while agregar_region:
         agregar_region = input("¿Desea agregar otra región?: y/n ")
         if agregar_region.lower() == 'n':
             agregar_region = False
 
         elif agregar_region.lower() == 'y':
-            x = int(input("Ingrese la coordenada X de la región: "))
-            y = int(input("Ingrese la coordenada Y de la región: "))
+            x = int(input(f"Ingrese la coordenada X de la región {i}: "))
+            y = int(input(f"Ingrese la coordenada Y de la región {i}: "))
             coordenadas.append((x, y))
+            i += 1
         
         else:
             print('Por favor, introduce "y" o "n"') 
@@ -38,7 +40,22 @@ def obtener_datos():
     return frames, background, radio, bck_radio, coordenadas
 
 def normalize(df):
-    '''Normaliza los valores de un dataframe'''
+    """
+    Normaliza los valores entre 0 y 1 de todos los valores entregados
+    en el dataframe
+
+Parameters
+----------
+    
+df : Pandas Dataframe
+
+Returns
+-------
+Pandas DataFrame
+
+    Retorna una dataframe con los valores normalizados entre 0 y 1
+
+"""
 
     result = df.copy()
     max_value = max(df.max())
@@ -48,7 +65,23 @@ def normalize(df):
     return result
 
 def segmentar(imagen, coordenadas, radio):
-    '''Muestra la región a analizar'''
+    """
+    Se realiza un "masking" de la imagen a analizar. Es decir, seleccionamos
+    sólo las regiones que nos interesan, e ignoramos el resto.
+
+Parameters
+----------
+    
+imagen : numpy.ndarray     (ski.imread())
+
+Returns
+-------
+Pandas numpy.ndarray
+
+    Retorna un numpy array sólo con los valores (en pixel, que representa
+    luminiscencia) de interés
+
+"""
 
     mask = np.ones(shape=imagen[0].shape[0:2], dtype='bool')
     for coordenada in coordenadas:
@@ -60,10 +93,44 @@ def segmentar(imagen, coordenadas, radio):
     return imagen[0]    
 
 def analisis_region(image, coordenadas, background, radius, bckground_radius, frames=162):
-    '''Retorna un dataframe que posee los valores promedios de intensidad de las regiones
-       de interés.
-       Se itera sobre las coordenadas (regiones) y se obtiene la intensidad promedio de la
-       región en cada frame'''
+    """
+    Calcula el promedio del valor de los pixeles de las regiones de interes.
+    Está corregido por el background
+
+Parameters
+----------
+    
+image : numpy.ndarray     (ski.imread()
+
+
+coordenadas : list of tuples
+
+    Es una lista que contiene las tuplas de coordenadas de interés.
+
+background : tuple
+
+    Tupla que representa las coordenadas de la región background
+
+radius : int
+
+    El radio deseado de las regiones de interés
+
+bckground_radius : int
+
+    El radio deseado de la región background
+
+frames : int
+
+    Numero de frames que posee el archivo de imagen
+
+Returns
+-------
+Pandas DataFrame
+
+    Retorna un dataframe de dimensiones N° regiones x N° frames. Cada
+    fila representa el valor de intensidad (en pixeles). Cada columna
+    representa una región.
+"""
 
     all_intensity = [] #Contendrá la intensidad de las regiones en todos los frames
     
@@ -78,7 +145,7 @@ def analisis_region(image, coordenadas, background, radius, bckground_radius, fr
     #Se transforma la lista all_intensity a un DF.
     df = pd.DataFrame(all_intensity).T 
 
-    #Para nombre de columnas
+    #Para establecer el nombre de las columnas
     columns = ['Region_'+str(i) for i in range(1,len(coordenadas)+1)] 
     df.columns = columns 
     
