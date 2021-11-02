@@ -1,5 +1,5 @@
 # BIO295A
-Se encuentran los scripts utilizados en el curso BIO295A, con el fin de analizar imágenes de series de tiempo obtenidas en placas de 96 pocillos y en otros formatos.
+Se encuentran los [scripts](https://github.com/tcaceresm/BIO295A/tree/main/Scripts) utilizados en el curso BIO295A, con el fin de analizar imágenes de series de tiempo obtenidas en placas de 96 pocillos y en otros formatos.
 
 # Link para abrir los notebooks en Colab
 
