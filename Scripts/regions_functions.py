@@ -92,7 +92,7 @@ Pandas numpy.ndarray
     imagen[0][mask] = 0
     return imagen[0]    
 
-def analisis_region(image, coordenadas, background, radius, bckground_radius, frames=162):
+def intensidad_region(image, coordenadas, background, radius, bckground_radius, frames=162):
     """
     Calcula el promedio del valor de los pixeles de las regiones de interes.
     Está corregido por el background
@@ -142,7 +142,7 @@ Pandas DataFrame
             frame_intensity.append(valor_1)
         all_intensity.append(frame_intensity)
 
-    #Se transforma la lista all_intensity a un DF.
+    #Se transforma la lista all_intensity a un DataFrame.
     df = pd.DataFrame(all_intensity).T 
 
     #Para establecer el nombre de las columnas
