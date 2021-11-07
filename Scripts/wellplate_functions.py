@@ -140,7 +140,7 @@ Pandas Dataframe
     image = np.reshape(imagen, dimension)
     #n_frames = dimension[0]
 
-    coordenadas = coordenadas_pocillos(coordinate)
+    # coordenadas = coordenadas_pocillos(coordinate)
     all_intensities = []
 
     #Itero por cada frame en la imagen
@@ -152,7 +152,7 @@ Pandas Dataframe
         bck1, bck2 = background
         bg_value = np.mean(frames[draw.circle(bck1, bck2, radius=radius, shape=frames.shape[0:2])])
 
-        for pocillo in coordenadas:
+        for pocillo in coordinate:
             #Calculo la intensidad del pocillo
             x, y = pocillo
             mean = np.mean(frames[draw.circle(y, x, radius=radius, shape=frames.shape[0:2])]) - bg_value
@@ -216,4 +216,4 @@ Pandas numpy.ndarray
         mask[rr, cc] = False
         imagen[0][rr, cc]
     imagen[0][mask] = 0
-    return imagen[0]  
+    return imagen[0]
