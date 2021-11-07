@@ -2,11 +2,10 @@
 Se encuentran los [scripts](https://github.com/tcaceresm/BIO295A/tree/main/Scripts) utilizados en el curso BIO295A, con el fin de analizar imágenes de series de tiempo obtenidas en placas de 96 pocillos y en otros formatos.
 Por supuesto, se puede mejorar bastante los scripts y las explicaciones. Estoy trabajando para eso c:
 
-![](https://github.com/tcaceresm/BIO295A/blob/test/gif2.gif)
+<img src="https://github.com/tcaceresm/BIO295A/blob/test/gif2.gif" width="250" height="250" />
+<img src="https://github.com/tcaceresm/BIO295A/blob/test/gif_nina.gif" width="250" height="250" />
+<img src="https://github.com/tcaceresm/BIO295A/blob/test/placas_gif.gif" width="250" height="250" />
 
-![](https://github.com/tcaceresm/BIO295A/blob/test/gif_nina.gif)
-
-![](https://github.com/tcaceresm/BIO295A/blob/test/placas_gif.gif)
 
 # Link para abrir los notebooks en Colab
 
