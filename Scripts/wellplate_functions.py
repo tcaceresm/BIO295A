@@ -190,11 +190,30 @@ Pandas DataFrame
         result[feature_name] = (df[feature_name] - min_value) / (max_value - min_value)
     return result
 
-def segmentar(imagen, coordenada, radio):
-    '''Muestra la región a analizar'''
-    x, y = coordenada
+def segmentar(imagen, coordenadas, radio):
+    """
+    Se realiza un "masking" de la imagen a analizar. Es decir, seleccionamos
+    sólo las regiones que nos interesan, e ignoramos el resto.
+
+Parameters
+----------
+    
+imagen : numpy.ndarray     (ski.imread())
+
+Returns
+-------
+Pandas numpy.ndarray
+
+    Retorna un numpy array sólo con los valores (en pixel, que representa
+    luminiscencia) de interés
+
+"""
+
     mask = np.ones(shape=imagen[0].shape[0:2], dtype='bool')
-    cc, rr = draw.circle(x, y,radius=radio)
-    mask[rr, cc] = False
-    imagen[mask] = 0
-    return imagen
+    for coordenada in coordenadas:
+        x, y = coordenada
+        cc, rr = draw.circle(x, y, radius=radio, shape=imagen[0].shape[0:2])
+        mask[rr, cc] = False
+        imagen[0][rr, cc]
+    imagen[0][mask] = 0
+    return imagen[0]  
