@@ -1,7 +1,7 @@
 from skimage import draw
 import numpy as np
 import pandas as pd
-import plotly.express as px
+
 
 
 def obtener_datos():
@@ -31,10 +31,9 @@ def obtener_datos():
 
     return tupla_coordenadas, radio_pocillos, tupla_bckground, dimension
 
-def distancias_pocillos(coordenadas, columns=12, rows=8):
+def coordenadas_pocillos(coordenadas, columns=12, rows=8):
     """
-    Calcula la distancia entre pocillos de una misma fila y
-    entre filas distintas.
+    Calcula las coordenadas de todos los pocillos de la placa.
 
 Parameters
 ----------
@@ -57,10 +56,9 @@ Returns
 -------
 Tuple
 
-    Retorna una tupla con los valores de x e y inicial, además de las distancias entre
-    pocillos
+    Retorna una lista de tuplas con los valores de las coordenadas de todos los pocillos
 """
-    # Asigno las coordenadas entregadas a una variable 
+    # Asigno las coordenadas entregadas a una variable separada (tuple unpacking)
     x0, y0, x1, y1, x2, y2, x3, y3 = coordenadas
 
     #Distancia entre pocillos de cada columna
@@ -71,14 +69,32 @@ Tuple
     x_dist2 = (np.abs(x0 - x3)*(np.sqrt((y3-y0)**2 + (x0 - x3)**2) / (rows - 1)))/np.sqrt((y3-y0)**2 + (x0 - x3)**2)
     y_dist2 = (np.abs(y3 - y0)*(np.sqrt((y3-y0)**2 + (x0 - x3)**2) / (rows - 1)))/np.sqrt((y3-y0)**2 + (x0 - x3)**2)
 
-    return x0, y0, x_dist, y_dist, x_dist2, y_dist2
+    #Obtención de las coordenadas de cada pocillo
+    all_coordinates = []
+    x = x0
+    y = y0
+    #se itera por cada fila
+    for row in range(rows):
+        #Al terminar de las coordenadas de todas las columnas de una fila...
+        #...se reestablece la posicion al pocillo de más a la izquierda de la siguiente fila
 
+        y = y0 + y_dist2*row
+        x = x0 - x_dist2*row
 
+        #Se itera por cada columna
+        for col in range(columns):    
+            # luego de calcular la coordenada de un pocillo de una columna, voy al siguiente pocillo
+            # en la siguiente columna.
+            all_coordinates.append((x, y))
+            x += x_dist 
+            y += y_dist
 
-def placas_analisis(imagen, coordinate, radius, background,
+    return all_coordinates
+
+def intensidad_pocillos(imagen, coordinate, radius, background,
                     dimension=(360, 1024, 1024), rows= 8, columns=12):
     """
-    Realiza un análisis cuantitativo de los 96 pocillos presentes en una placa.
+    Calcula la intensidad promedio (en pixeles) de todos los pocillos.
 
 Parameters
 ----------
@@ -91,7 +107,7 @@ imagen : numpy.ndarray
     
 coordinate : tuple
 
-    Coordenadas del centro de los pocillos de los vértices de la placa
+    Coordenadas del centro de los pocillos
 
 radius : int
 
@@ -122,66 +138,33 @@ Pandas Dataframe
     de los 96 pocillos de la placa.
 """
     image = np.reshape(imagen, dimension)
-    n_frames = dimension[0]
+    #n_frames = dimension[0]
 
-    df = []
-    #obtengo los valores de x e y iniciales, ademas de las distancias entre pocillos
-    x0, y0, x_dist, y_dist, x_dist2, y_dist2 = distancias_pocillos(coordinate, columns=columns, rows=rows)
-    mostrar_segmentacion = True
+    coordenadas = coordenadas_pocillos(coordinate)
+    all_intensities = []
 
-    # se crea una mask image utilizada para la segmentacion.
-    mask = np.ones(shape=image[0].shape[0:2], dtype="bool")
+    #Itero por cada frame en la imagen
     for frames in image:
-        x = x0
-        y = y0
-        #Acá obtengo los valores del background
+
+        frame_intensities = []
+        
+        #calculo el valor de intensidad del background
         bck1, bck2 = background
         bg_value = np.mean(frames[draw.circle(bck1, bck2, radius=radius, shape=frames.shape[0:2])])
 
-        #en la variable promedio guardaré los valores de cada pocillo de cada frame
-        promedio = []
-
-        #se itera por cada row
-        for row in range(rows):
-            #Al terminar de analizar todas las columnas de una fila...
-            #...se reestablece la posicion al pocillo de más a la izquierda de la siguiente fila
-
-            y = y0 + y_dist2*row
-            x = x0 - x_dist2*row
-
-            #Se itera por cada columna
-            for col in range(columns):
-                
-                #valor promedio de intensidad en pixeles de un pocillo
-                mean = np.mean(frames[draw.circle(y, x, radius=radius, shape=frames.shape[0:2])]) - bg_value
-                promedio.append(mean)
-
-                #Para la segmentación
-                cc, rr = draw.circle(x, y, radius=radius, shape=frames.shape[0:2])
-                mask[rr, cc] = False
-                frames[rr, cc]
-                
-                # luego de completar el análisis de un pocillo de una columna, voy al siguiente pocillo
-                # en la siguiente columna.
-                x += x_dist 
-                y += y_dist
+        for pocillo in coordenadas:
+            #Calculo la intensidad del pocillo
+            x, y = pocillo
+            mean = np.mean(frames[draw.circle(y, x, radius=radius, shape=frames.shape[0:2])]) - bg_value
+            frame_intensities.append(mean)
             
-        # se aplica la mask para la segmentación
-        frames[mask] = 0
-        if mostrar_segmentacion == True:         
-            fig = px.imshow(frames, width=1000, height=1000, title='Segmentación Realizada')
-            fig.show()
-            mostrar_segmentacion = False
-        df.append(promedio)
+        all_intensities.append(frame_intensities) 
 
-    #esto podria incluirlo en los bucles for anteriores. Es para generar el dataframe
-    column = [] 
-    row = []
-    for k in range(0, n_frames):
-        row.append('Frame '+ str(k))
-        if 0 < k < columns * rows + 1:
-            column.append('Well '+ str(k))
-    df = pd.DataFrame(df, index=row, columns=column)
+    #Aca genero el dataframe, ademas de generar el nombre de cada columna y fila
+    row = ['Frame ' + str(x) for x in range(1, len(all_intensities)+1)] 
+    column = ['Well ' + str(k) for k in range(1, rows*columns+1)]
+    df = pd.DataFrame(all_intensities, index=row, columns=column)
+
     return df
 
 def normalize(df):
@@ -206,12 +189,6 @@ Pandas DataFrame
     for feature_name in df.columns:
         result[feature_name] = (df[feature_name] - min_value) / (max_value - min_value)
     return result
-
-def mostrar_frame(image, frame, height=1000, width=1200):
-    '''Se muestra el frame deseado'''
-    fig = px.imshow(image[frame], height=height, width=width)
-    fig.show()
-    return
 
 def segmentar(imagen, coordenada, radio):
     '''Muestra la región a analizar'''
