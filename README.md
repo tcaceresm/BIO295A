@@ -9,7 +9,7 @@ Por supuesto, se puede mejorar bastante los scripts y las explicaciones. Estoy t
 
 # Link para abrir los notebooks en Colab
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tcaceresm/BIO295A/blob/test/ColabNotebooks/analisis_regiones.ipynb): Análisis de regiones dentro de imágenes de series de tiempo
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tcaceresm/BIO295A/blob/main/ColabNotebooks/analisis_regiones.ipynb): Análisis de regiones dentro de imágenes de series de tiempo
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tcaceresm/BIO295A/blob/main/ColabNotebooks/96_wellplate_analysis_v2.ipynb): Análisis de imágenes de series de tiempo de placas de 96 pocillos (v_2).
 
