@@ -3,7 +3,7 @@
 <img src="https://github.com/tcaceresm/BIO295A/blob/main/gifs_example/gif2.gif" width="250" height="250" />
 <img src="https://github.com/tcaceresm/BIO295A/blob/main/gifs_example/gif_nina.gif" width="250" height="250" />
 <img src="https://github.com/tcaceresm/BIO295A/blob/main/gifs_example/placas_gif.gif" width="250" height="250" />
-
+cacaca
 
 # Links to open Google Colab notebooks
 
